@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ video.title }}</h1>
+    <p>{{ video.description }}</p>
+    
+    <video controls class="mb-4" width="640" height="360">
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <hr>
+    <h3>コメント</h3>
+
+    {% if comments %}
+        <div class="mb-4">
+            {% for comment in comments %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <strong>{{ comment.user.username }}</strong>
+                    <small class="text-muted">{{ comment.created_at }}</small>
+                    <p>{{ comment.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>まだコメントはありません。</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <hr>
+    <h4>コメントを追加</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">投稿</button>
+    </form>
+    {% else %}
+    <p><a href="{% url 'login' %}">ログイン</a>するとコメントできます。</p>
+    {% endif %}
+</div>
+{% endblock %}

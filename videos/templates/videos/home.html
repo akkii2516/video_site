@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}ホーム{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% for video in videos %}
+    <div class="col-md-4 mb-4 animate__animated animate__fadeInUp">
+        <div class="card shadow-lg rounded-3">
+            <video class="card-img-top" controls>
+                <source src="{{ video.video_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="card-body">
+                <h5 class="card-title">{{ video.title }}</h5>
+                <p class="card-text">{{ video.description }}</p>
+                <a href="{% url 'video_detail' video.id %}" class="btn btn-primary">詳細を見る</a>
+                {% if user.is_authenticated %}
+                    {% if user == video.uploaded_by %}
+                        <!-- 削除ボタン -->
+                        <form method="post" action="{% url 'delete_video' video.id %}" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">削除</button>
+                        </form>
+                    {% else %}
+                        <p>ユーザーが一致しないため削除は不可能です</p>
+                    {% endif %}
+                {% else %}
+                    <p>ユーザー認証されていません。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <!-- {% if user.is_authenticated %}
+    <a href="{% url 'upload_video' %}" class="btn btn-success">動画投稿</a>
+    {% endif %} -->
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}ログイン{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>ログイン</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">ログイン</button>
+    </form>
+</div>
+
+<!-- メッセージを表示 -->
+{% if messages %}
+<div class="messages mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
